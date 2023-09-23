@@ -13,7 +13,7 @@ while True:
     try:
         os.system("cls")
         mostrar_opcoes()
-        opcao = int(input(Fore.YELLOW + "Escolha uma opção: " + Style.RESET_ALL))
+        opcao = int(input(Fore.YELLOW + "\nEscolha uma opção: " + Style.RESET_ALL))
         os.system("cls")
 
         if opcao == 1:
@@ -23,6 +23,8 @@ while True:
         elif opcao == 3:
             buscar_aluno()
         elif opcao == 4:
+            cadastro_curso()
+        elif opcao == 5:
             print(Fore.BLUE + "Encerrando programa" + Style.RESET_ALL)
             fechar_banco()
             break
@@ -31,6 +33,6 @@ while True:
             time.sleep(2)
     except ValueError:
         os.system("cls")
-        print(Fore.RED + "Digite corretamente o que foi pedido" + Style.RESET_ALL)
+        print(Fore.RED + "Digite o número das opções" + Style.RESET_ALL)
         time.sleep(3)
 

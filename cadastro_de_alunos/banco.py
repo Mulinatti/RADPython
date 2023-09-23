@@ -36,32 +36,52 @@ def cadastrar_curso(nome_curso):
     conexao.commit()
 
 def cadastrar_aluno(nome, email, curso):
-    if verificar_curso(curso):
+    if verificar_curso(curso) != False:
         cursor.execute(f'INSERT INTO aluno(nome, curso_id, email) VALUES ("{nome}", "{verificar_curso(curso)}", "{email}")')
         conexao.commit()
-        print(Fore.GREEN + "Aluno Cadastrado com Sucesso" + Style.RESET_ALL)
+        print(Fore.GREEN + "\nAluno Cadastrado com Sucesso" + Style.RESET_ALL)
         time.sleep(3)
         return
         
-    print(Fore.RED + "Não foi possível efetuar o cadastro pois o CURSO informado não existe" + Style.RESET_ALL)
+    print(Fore.RED + "\nNão foi possível efetuar o cadastro pois o CURSO informado não existe" + Style.RESET_ALL)
     time.sleep(3)
+
+def busca_aluno(termo_de_busca):
+    cursor.execute(f'SELECT * FROM aluno WHERE nome LIKE "{termo_de_busca}%" OR id_aluno = "{termo_de_busca}" OR curso_id IN (SELECT id_curso FROM cursos WHERE nome_curso LIKE "{termo_de_busca}%")')
+    alunos = cursor.fetchall()
+
+    if len(alunos) == 0:
+        print(Fore.BLUE + "\nNenhum aluno encontrado com esse termo de busca" + Style.RESET_ALL)
+        return
+    
+    printar_aluno(alunos)
 
 def listar_alunos():
     cursor.execute("SELECT * FROM aluno")
     alunos = cursor.fetchall()
 
-    for aluno in alunos:
-        print(aluno)
+    printar_aluno(alunos)
 
 def verificar_curso(curso_pretendido):
     cursor.execute("SELECT * FROM cursos")
     cursos = cursor.fetchall()
 
+    if len(cursos) < 1:
+        print(Fore.RED + "\nNão existem cursos cadastrados!" + Style.RESET_ALL)
+
     for curso in cursos:
+        if curso[0] == curso_pretendido:
+            return curso[1]
+
         if curso[1] == curso_pretendido:
             return curso[0]
     
     return False
+
+
+def printar_aluno(alunos):
+    for aluno in alunos:
+        print(f'{Fore.CYAN}ID:{Style.RESET_ALL} {aluno[0]} | {Fore.CYAN}Nome:{Style.RESET_ALL} {aluno[1]} | {Fore.CYAN}Curso:{Style.RESET_ALL} {verificar_curso(aluno[2])} | {Fore.CYAN}E-Mail:{Style.RESET_ALL} {aluno[3]}\n')
 
 
 def fechar_banco():
