@@ -9,12 +9,15 @@ def cadastrar_button_click():
     email = email_entry.get()
     curso = curso_entry.get()
 
-    if nome and email and curso:
-        cadastrar_aluno(nome, email, curso)
-        listar_alunos_cadastrados()
-    else:
-        messagebox.showerror("deixou campo em branco")
+    if not nome or not email or not curso:
+        messagebox.showerror("Erro", "Por favor, preencha todos os campos.")
+        return
 
+    cadastrar_aluno(nome, email, curso)
+    listar_alunos_cadastrados()
+    
+    mensagem_sucesso = f"Aluno {nome} cadastrado com sucesso!"
+    messagebox.showinfo("Sucesso", mensagem_sucesso)
 def cadastrar_curso_button_click():
     nome_curso = curso_cadastrar_entry.get()
     if nome_curso:
@@ -51,6 +54,7 @@ def update_alunos_cadastrados_theme():
 app = ThemedTk(theme="arc")
 app.title("Cadastro de Alunos")
 app.minsize(600, 400)
+app.resizable(False, False) 
 frame = ttk.Frame(app)
 frame.pack()
 nome_label = ttk.Label(frame, text="Nome:")
@@ -77,7 +81,7 @@ frame_cadastrar_curso = ttk.Frame(frame)
 frame_cadastrar_curso.grid(row=4, column=0, columnspan=3, pady=5, sticky="w")
 curso_cadastrar_label = ttk.Label(frame_cadastrar_curso, text="Cadastrar Curso:")
 curso_cadastrar_label.grid(row=0, column=0, padx=(15, 15), pady=5, sticky="w")
-curso_cadastrar_entry = ttk.Entry(frame_cadastrar_curso, width=40)  # Ajuste o tamanho conforme necessário
+curso_cadastrar_entry = ttk.Entry(frame_cadastrar_curso, width=40)  
 curso_cadastrar_entry.grid(row=1, column=0, padx=(15, 15), pady=5, sticky="w")
 cadastrar_curso_button = ttk.Button(frame_cadastrar_curso, text="Cadastrar Curso", command=cadastrar_curso_button_click, style="Blue.TButton")
 cadastrar_curso_button.grid(row=2, column=0, padx=(15, 15), pady=5, sticky="w")
@@ -100,22 +104,23 @@ buscar_button.grid(row=6, column=2, padx=5, pady=5, sticky="w")
 # alunos cadastrados
 alunos_cadastrados_label = ttk.Label(frame, text="Alunos Cadastrados:")
 alunos_cadastrados_label.grid(row=7, columnspan=3, pady=5, sticky="n")
+header_text = "ID  NOME  CURSO  EMAIL\n" 
+header_label = ttk.Label(frame, text=header_text)
+header_label.grid(row=8, columnspan=3, pady=5, sticky="n")
 alunos_cadastrados = tk.Text(frame, wrap="none", state="disabled", height=10, width=80)
-alunos_cadastrados.grid(row=8, columnspan=3, pady=10)
+alunos_cadastrados.grid(row=9, columnspan=3, pady=10)
 
 # claro e escuro
 toggle_theme_arc_button = ttk.Button(frame, text="Modo Claro", command=toggle_theme_arc, style="Blue.TButton")
-toggle_theme_arc_button.grid(row=9, column=0, padx=5, pady=5, sticky="e")
+toggle_theme_arc_button.grid(row=11, column=0, padx=5, pady=5, sticky="e")
 
 toggle_theme_equilux_button = ttk.Button(frame, text="Modo Escuro", command=toggle_theme_equilux, style="Blue.TButton")
-toggle_theme_equilux_button.grid(row=9, column=2, padx=5, pady=5, sticky="w")
+toggle_theme_equilux_button.grid(row=11, column=2, padx=5, pady=5, sticky="w")
 
 x = (app.winfo_screenwidth() - app.winfo_reqwidth()) // 2
 y = (app.winfo_screenheight() - app.winfo_reqheight()) // 2
 app.geometry("+{}+{}".format(x, y))
 
 app.mainloop()
-
-
 
 
