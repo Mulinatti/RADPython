@@ -48,6 +48,7 @@ def update_alunos_cadastrados_theme():
 app = ThemedTk(theme="arc")
 app.title("Cadastro de Alunos")
 app.minsize(600, 400)
+app.resizable(False, False)
 frame = ttk.Frame(app)
 frame.pack()
 nome_label = ttk.Label(frame, text="Nome:")
