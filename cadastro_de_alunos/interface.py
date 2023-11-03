@@ -98,14 +98,17 @@ buscar_button.grid(row=6, column=2, padx=5, pady=5, sticky="w")
 alunos_cadastrados_label = ttk.Label(frame, text="Alunos Cadastrados:")
 alunos_cadastrados_label.grid(row=7, columnspan=3, pady=5, sticky="n")
 alunos_cadastrados = tk.Text(frame, wrap="none", state="disabled", height=10, width=80)
-alunos_cadastrados.grid(row=8, columnspan=3, pady=10)
+alunos_cadastrados.grid(row=9, columnspan=3, pady=10)
+header_text = "ID                                                            NOME                                                              CURSO                                                 EMAIL\n" 
+header_label = ttk.Label(frame, text=header_text)
+header_label.grid(row=8, columnspan=3, pady=2, sticky="n")
 
-# claro e escuro
-toggle_theme_arc_button = ttk.Button(frame, text="Modo Claro", command=toggle_theme_arc, style="Blue.TButton")
-toggle_theme_arc_button.grid(row=9, column=0, padx=5, pady=5, sticky="e")
+excluir_button = ttk.Button(frame, text="Excluir aluno", style="Blue.TButton")
+excluir_button.grid(row=12, column=0, columnspan=3, pady=9, sticky="n") 
 
-toggle_theme_equilux_button = ttk.Button(frame, text="Modo Escuro", command=toggle_theme_equilux, style="Blue.TButton")
-toggle_theme_equilux_button.grid(row=9, column=2, padx=5, pady=5, sticky="w")
+
+
+    
 
 x = (app.winfo_screenwidth() - app.winfo_reqwidth()) // 2
 y = (app.winfo_screenheight() - app.winfo_reqheight()) // 2
