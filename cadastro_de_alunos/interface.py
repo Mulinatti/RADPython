@@ -2,20 +2,46 @@ import tkinter as tk
 from tkinter import ttk
 from tkinter import messagebox
 from ttkthemes import ThemedTk
-from banco import cadastrar_aluno, listar_alunos, cadastrar_curso, verificar_curso
+from banco import *
 
 def cadastrar_button_click():
     nome = nome_entry.get()
     email = email_entry.get()
     curso = curso_entry.get()
 
-    if len(nome) or len(email) or len(curso) <= 0:
+    if not nome or not email or not curso:
         messagebox.showwarning("Aviso", "PREENCHA TODOS OS CAMPOS")
+        return
+
+    if cadastrar_aluno(nome, email, curso):
+        messagebox.showinfo("Sucesso", "Aluno Cadastrado!")
+
+    else:
+        messagebox.showwarning("Error", "Curso não existe")
 
 def cadastrar_curso_button_click():
     nome_curso = curso_cadastrar_entry.get()
-    if nome_curso:
+
+    if len(nome_curso) != 0:
         cadastrar_curso(nome_curso)
+        messagebox.showinfo("Sucesso", "Curso cadastrado!")
+    else:
+        messagebox.showwarning("Aviso", "Preencha o campo!")
+        return
+
+
+def buscar_aluno_click():
+    alunos_cadastrados_label["text"] = ""
+
+    termo = buscar_entry.get()
+
+    lixo = busca_aluno(termo)
+    
+    aluno = lixo[0]
+
+    alunos_cadastrados_label["text"] = f"{aluno[0]},{aluno[1]},{verificar_curso(aluno[2])},{aluno[3]}"
+    alunos_cadastrados_label.grid(row=7, columnspan=5)
+        
 
 def toggle_theme_arc():
     app.set_theme("arc")
@@ -48,9 +74,11 @@ def update_alunos_cadastrados_theme():
 app = ThemedTk(theme="arc")
 app.title("Cadastro de Alunos")
 app.minsize(600, 400)
-app.resizable(False, False)
 frame = ttk.Frame(app)
 frame.pack()
+
+iniciar_banco()
+
 nome_label = ttk.Label(frame, text="Nome:")
 nome_label.grid(row=0, column=0, padx=5, pady=5, sticky="e")
 nome_entry = ttk.Entry(frame, width=40)  
@@ -92,24 +120,24 @@ buscar_label = ttk.Label(frame, text="Buscar Aluno:")
 buscar_label.grid(row=6, column=0, padx=5, pady=5, sticky="e")
 buscar_entry = ttk.Entry(frame, width=40)
 buscar_entry.grid(row=6, column=1, padx=5, pady=5)
-buscar_button = ttk.Button(frame, text="Buscar Aluno", style="Blue.TButton")
+buscar_button = ttk.Button(frame, text="Buscar Aluno", command=buscar_aluno_click, style="Blue.TButton")
 buscar_button.grid(row=6, column=2, padx=5, pady=5, sticky="w")
+
+alunos_cadastrados_label = ttk.Label(frame)
+alunos_cadastrados_label.grid(row=7, columnspan=5)
 
 # alunos cadastrados
 alunos_cadastrados_label = ttk.Label(frame, text="Alunos Cadastrados:")
 alunos_cadastrados_label.grid(row=7, columnspan=3, pady=5, sticky="n")
 alunos_cadastrados = tk.Text(frame, wrap="none", state="disabled", height=10, width=80)
-alunos_cadastrados.grid(row=9, columnspan=3, pady=10)
-header_text = "ID                                                            NOME                                                              CURSO                                                 EMAIL\n" 
-header_label = ttk.Label(frame, text=header_text)
-header_label.grid(row=8, columnspan=3, pady=2, sticky="n")
+alunos_cadastrados.grid(row=8, columnspan=3, pady=10)
 
-excluir_button = ttk.Button(frame, text="Excluir aluno", style="Blue.TButton")
-excluir_button.grid(row=12, column=0, columnspan=3, pady=9, sticky="n") 
+# claro e escuro
+toggle_theme_arc_button = ttk.Button(frame, text="Modo Claro", command=toggle_theme_arc, style="Blue.TButton")
+toggle_theme_arc_button.grid(row=9, column=0, padx=5, pady=5, sticky="e")
 
-
-
-    
+toggle_theme_equilux_button = ttk.Button(frame, text="Modo Escuro", command=toggle_theme_equilux, style="Blue.TButton")
+toggle_theme_equilux_button.grid(row=9, column=2, padx=5, pady=5, sticky="w")
 
 x = (app.winfo_screenwidth() - app.winfo_reqwidth()) // 2
 y = (app.winfo_screenheight() - app.winfo_reqheight()) // 2

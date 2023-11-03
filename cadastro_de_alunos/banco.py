@@ -36,7 +36,14 @@ def cadastrar_curso(nome_curso):
     conexao.commit()
 
 def cadastrar_aluno(nome, email, curso):
-    print(nome, email, curso)
+    if verificar_curso(curso) != False:
+        cursor.execute(f'INSERT INTO aluno(nome, curso_id, email) VALUES ("{nome}", "{verificar_curso(curso)}", "{email}")')
+        conexao.commit()
+        print(Fore.GREEN + "\nAluno Cadastrado com Sucesso" + Style.RESET_ALL)
+        time.sleep(3)
+        return True
+        
+    return False
 
 def busca_aluno(termo_de_busca):
     cursor.execute(f'SELECT * FROM aluno WHERE nome LIKE "{termo_de_busca}%" OR id_aluno = "{termo_de_busca}" OR curso_id IN (SELECT id_curso FROM cursos WHERE nome_curso LIKE "{termo_de_busca}%")')
@@ -44,9 +51,10 @@ def busca_aluno(termo_de_busca):
 
     if len(alunos) == 0:
         print(Fore.BLUE + "\nNenhum aluno encontrado com esse termo de busca" + Style.RESET_ALL)
-        return
+        return False
     
     printar_aluno(alunos)
+    return alunos
 
 def listar_alunos():
     cursor.execute("SELECT * FROM aluno")
