@@ -18,6 +18,20 @@ def cadastrar_button_click():
 
     else:
         messagebox.showwarning("Error", "Curso não existe")
+def listar_alunos_cadastrados():
+    alunos = listar_alunos()
+    
+    if alunos is not None:
+        alunos_cadastrados.config(state="normal")
+        alunos_cadastrados.delete(1.0, tk.END)
+
+        for aluno in alunos:
+            alunos_cadastrados.insert(tk.END, f"ID: {aluno[0]}Nome: {aluno[1]}Curso: {verificar_curso(aluno[2])}")
+            alunos_cadastrados.insert(tk.END)
+
+        alunos_cadastrados.config(state="disabled")
+        
+
 
 def cadastrar_curso_button_click():
     nome_curso = curso_cadastrar_entry.get()
@@ -31,49 +45,63 @@ def cadastrar_curso_button_click():
 
 
 def buscar_aluno_click():
-    alunos_cadastrados_label["text"] = ""
-
     termo = buscar_entry.get()
+    alunos_encontrados = busca_aluno(termo)
 
-    lixo = busca_aluno(termo)
-    
-    aluno = lixo[0]
+    alunos_cadastrados.config(state="normal")
+    alunos_cadastrados.delete(1.0, tk.END)
 
-    alunos_cadastrados_label["text"] = f"{aluno[0]},{aluno[1]},{verificar_curso(aluno[2])},{aluno[3]}"
-    alunos_cadastrados_label.grid(row=7, columnspan=5)
-        
+    if alunos_encontrados:
+        aluno = alunos_encontrados[0]  
+        id_aluno = aluno[0]
+        nome_aluno = aluno[1]
+        curso_aluno = verificar_curso(aluno[2])
+        email_aluno = aluno[3]
+
+        alunos_cadastrados.insert(tk.END, f"ID: {id_aluno}| Nome: {nome_aluno}| Curso: {curso_aluno}| E-Mail: {email_aluno}")
+   
+        excluir_button["command"] = lambda: excluir_aluno(id_aluno)
+    else:
+        alunos_cadastrados.insert(tk.END, "Nenhum aluno encontrado")
+
+    alunos_cadastrados.config(state="disabled")
 
 def toggle_theme_arc():
     app.set_theme("arc")
-    update_alunos_cadastrados_theme()
+def excluir_aluno(id_aluno):
+    confirmacao = messagebox.askyesno("Confirmar remoção", f" deseja excluir o aluno com id {id_aluno}?")
+
+    if confirmacao:
+       
+        excluir_aluno_banco(id_aluno)
+        
+        
+        listar_alunos_cadastrados()
 
 def toggle_theme_equilux():
     app.set_theme("equilux")
-    update_alunos_cadastrados_theme()
+
 
 def listar_alunos_cadastrados():
     alunos = listar_alunos()
-    alunos_cadastrados.config(state="normal") 
-    alunos_cadastrados.delete(1.0, tk.END)  
+    
+    if alunos is not None:
+        alunos_cadastrados.config(state="normal")
+        alunos_cadastrados.delete(1.0, tk.END)
 
-    for aluno in alunos:
-        alunos_cadastrados.insert(tk.END, f"ID: {aluno[0]}\nNome: {aluno[1]}\nCurso: {verificar_curso(aluno[2])}\n")
-        alunos_cadastrados.insert(tk.END, "-" * 50 + "\n") 
-        
-    alunos_cadastrados.config(state="disabled") 
-    update_alunos_cadastrados_theme()
+        for aluno in alunos:
+            aluno_text = f"ID: {aluno[0]} | Nome: {aluno[1]} | Curso: {verificar_curso(aluno[2])}\n"
+            alunos_cadastrados.insert(tk.END, aluno_text)
 
-def update_alunos_cadastrados_theme():
-    theme = app.get_themes()[0]  
-    if "equilux" in theme.lower():
-        alunos_cadastrados.configure(bg="black", fg="white")
+        alunos_cadastrados.config(state="disabled")
     else:
-        
-        alunos_cadastrados.configure(bg="SystemButtonFace", fg="SystemWindowText")#tema claro
+        print("Erro ao listar alunos") 
 
+    
 app = ThemedTk(theme="arc")
 app.title("Cadastro de Alunos")
 app.minsize(600, 400)
+app.resizable(False, False)
 frame = ttk.Frame(app)
 frame.pack()
 
@@ -103,7 +131,7 @@ frame_cadastrar_curso = ttk.Frame(frame)
 frame_cadastrar_curso.grid(row=4, column=0, columnspan=3, pady=5, sticky="w")
 curso_cadastrar_label = ttk.Label(frame_cadastrar_curso, text="Cadastrar Curso:")
 curso_cadastrar_label.grid(row=0, column=0, padx=(15, 15), pady=5, sticky="w")
-curso_cadastrar_entry = ttk.Entry(frame_cadastrar_curso, width=40)  # Ajuste o tamanho conforme necessário
+curso_cadastrar_entry = ttk.Entry(frame_cadastrar_curso, width=40) 
 curso_cadastrar_entry.grid(row=1, column=0, padx=(15, 15), pady=5, sticky="w")
 cadastrar_curso_button = ttk.Button(frame_cadastrar_curso, text="Cadastrar Curso", command=cadastrar_curso_button_click, style="Blue.TButton")
 cadastrar_curso_button.grid(row=2, column=0, padx=(15, 15), pady=5, sticky="w")
@@ -132,16 +160,14 @@ alunos_cadastrados_label.grid(row=7, columnspan=3, pady=5, sticky="n")
 alunos_cadastrados = tk.Text(frame, wrap="none", state="disabled", height=10, width=80)
 alunos_cadastrados.grid(row=8, columnspan=3, pady=10)
 
-# claro e escuro
-toggle_theme_arc_button = ttk.Button(frame, text="Modo Claro", command=toggle_theme_arc, style="Blue.TButton")
-toggle_theme_arc_button.grid(row=9, column=0, padx=5, pady=5, sticky="e")
-
-toggle_theme_equilux_button = ttk.Button(frame, text="Modo Escuro", command=toggle_theme_equilux, style="Blue.TButton")
-toggle_theme_equilux_button.grid(row=9, column=2, padx=5, pady=5, sticky="w")
+listar_alunos_cadastrados()
 
 x = (app.winfo_screenwidth() - app.winfo_reqwidth()) // 2
 y = (app.winfo_screenheight() - app.winfo_reqheight()) // 2
-app.geometry("+{}+{}".format(x, y))
+app.geometry("+{}+{}".format(x , y))
+
+excluir_button = ttk.Button(frame, text="Excluir aluno", style="Blue.TButton")
+excluir_button.grid(row=12, column=0, columnspan=3, pady=9, sticky="n") 
 
 app.mainloop()
 

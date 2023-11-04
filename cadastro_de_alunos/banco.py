@@ -55,12 +55,15 @@ def busca_aluno(termo_de_busca):
     
     printar_aluno(alunos)
     return alunos
-
+def excluir_aluno_banco(id_aluno):
+    cursor.execute(f"DELETE FROM aluno WHERE id_aluno = {id_aluno}")
+    conexao.commit()
 def listar_alunos():
     cursor.execute("SELECT * FROM aluno")
     alunos = cursor.fetchall()
 
     printar_aluno(alunos)
+    return alunos
 
 def verificar_curso(curso_pretendido):
     cursor.execute("SELECT * FROM cursos")
