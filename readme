@@ -3,3 +3,25 @@ ALUNOS:
   Thiago Borba Andrade(202203951361)
   Leonardo Oliveira Lemos (202202955591)
 DISCIPLINA: Desenvolvimento Rápido de Aplicações em Python
+
+
+Trabalho para prova valendo 5,0:
+Aula 9
+Questão 1)
+D) É o framework padrão do Python para desenvolvimento de aplicações GUI.
+Questão 2)
+C) Uma das formas de instalá-lo é através do pip, ou seja, pip install flexx.
+
+Aula 10
+Questão 1)
+A) Botão: uma possibilidade de uso é para confirmar uma ação de salvar os dados.
+Questão 2)
+B) Substituir lacuna1 por tkinter e lacuna2 por mainloop.
+
+Aula 11
+Questão 1)
+E) import psycopg2 con = psycopg2.connect(host='localhost', database='exemplo', user='postgres',
+password='postgres123')
+Questão 2)
+B) O programa realiza uma consulta na tabela AGENDA onde o atributo id
+da tabela seja igual a 1.
